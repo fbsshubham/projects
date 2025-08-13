@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration | Mock Test System</title>
+    <style>
+        /* ===== BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #9ACD32;
+            --primary-dark: #7CB342;
+            --primary-darker: #689F38;
+            --surface-dark: #2c2c2c;
+            --surface-darker: #1a1a1a;
+            --surface-light: #3a3a3a;
+            --surface-lighter: #4a4a4a;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #cccccc;
+            --error-color: #ff416c;
+            --success-color: #4caf50;
+            --info-color: #4facfe;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--surface-dark) 0%, var(--surface-darker) 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+
+        /* ===== CONTAINER STYLES ===== */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(145deg, var(--surface-light), var(--surface-dark));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+            border: 1px solid var(--surface-lighter);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes movePattern {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== HEADER COMPONENTS ===== */
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: linear-gradient(145deg, var(--surface-lighter), var(--surface-light));
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--surface-dark);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: var(--surface-darker);
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 20px
+            );
+            animation: movePattern 20s linear infinite;
+        }
+
+        .header h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--surface-lighter);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            background: #2a2a2a;
+            box-shadow: 0 0 0 3px rgba(154, 205, 50, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group select option {
+            background: #2a2a2a;
+            color: var(--text-primary);
+            padding: 10px;
+        }
+
+        /* ===== CAMERA SECTION ===== */
+        .camera-section {
+            background: linear-gradient(145deg, var(--surface-light), var(--surface-dark));
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 25px 0;
+            border: 2px dashed var(--surface-lighter);
+            transition: all 0.3s ease;
+        }
+
+        .camera-section.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(154, 205, 50, 0.1);
+        }
+
+        .camera-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        #camera {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            border-radius: 12px;
+            background: #000;
+            object-fit: cover;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--surface-lighter);
+        }
+
+        #snapshot {
+            display: none;
+        }
+
+        .photo-preview {
+            margin: 15px 0;
+            display: none;
+        }
+
+        .photo-preview img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--primary-color);
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn {
+            background: linear-gradient(145deg, var(--primary-color), var(--primary-dark));
+            color: var(--surface-darker);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 15px rgba(154, 205, 50, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(145deg, var(--primary-dark), var(--primary-darker));
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(154, 205, 50, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 
+                0 4px 15px rgba(154, 205, 50, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            font-size: 1.1rem;
+            padding: 15px 35px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .btn-retake {
+            background: linear-gradient(145deg, #ff7b7b, var(--error-color));
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            color: white;
+        }
+
+        /* ===== NAVIGATION BUTTONS ===== */
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(145deg, #555555, #444444);
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+            gap: 8px;
+            box-shadow: 
+                0 4px 15px rgba(85, 85, 85, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(145deg, #666666, #555555);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(85, 85, 85, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== STATUS MESSAGES ===== */
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-success {
+            background: linear-gradient(145deg, rgba(154, 205, 50, 0.2), rgba(124, 179, 66, 0.2));
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .status-error {
+            background: linear-gradient(145deg, rgba(255, 75, 75, 0.2), rgba(255, 65, 108, 0.2));
+            color: #ff7b7b;
+            border: 1px solid #ff7b7b;
+        }
+
+        .status-info {
+            background: linear-gradient(145deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            color: var(--info-color);
+            border: 1px solid var(--info-color);
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .icon {
+            font-size: 1.2rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(154, 205, 50, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                max-width: 95%;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 25px 15px;
+            }
+
+            .header h2 {
+                font-size: 1.8rem;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="date"],
+            .form-group select {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+
+            .camera-section {
+                padding: 20px 15px;
+            }
+
+            #camera {
+                height: 180px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                margin: 5px;
+            }
+
+            .btn-success {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h2 {
+                font-size: 1.6rem;
+            }
+
+            .form-container {
+                padding: 25px 15px;
+            }
+
+            #camera {
+                height: 160px;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logo Header -->
+        <div class="logo-header">
+            <div class="logo">MT</div>
+            <div>
+                <h3 style="color: var(--primary-color); margin: 0;">MockTest System</h3>
+                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Student Registration Portal</p>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <div class="header">
+            <h2>📚 Student Registration</h2>
+            <p>Complete your profile for mock test</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            <form id="studentForm" method="post" action="http://localhost:8080/students/save" enctype="application/x-www-form-urlencoded">
+                
+                <!-- Roll Number -->
+                <div class="form-group">
+                    <label for="rollNo">
+                        <span class="icon">🎓</span>
+                        Roll Number
+                    </label>
+                    <input type="text" name="rollNo" id="rollNo" required placeholder="Enter your roll number">
+                </div>
+
+                <!-- Student Name -->
+                <div class="form-group">
+                    <label for="studentName">
+                        <span class="icon">👤</span>
+                        Student Name
+                    </label>
+                    <input type="text" name="studentName" id="studentName" required placeholder="Enter your full name">
+                </div>
+
+                <!-- Batch Name -->
+                <div class="form-group">
+                    <label for="batchName">
+                        <span class="icon">📅</span>
+                        Batch Name
+                    </label>
+                    <select name="batchName" id="batchName" required>
+                        <option value="">--Select Batch--</option>
+                        <option value="Jan 2025">Jan 2025</option>
+                        <option value="Feb 2025">Feb 2025</option>
+                        <option value="Mar 2025">Mar 2025</option>
+                        <option value="Apr 2025">Apr 2025</option>
+                        <option value="May 2025">May 2025</option>
+                        <option value="Jun 2025">Jun 2025</option>
+                        <option value="Jul 2025">Jul 2025</option>
+                        <option value="Aug 2025">Aug 2025</option>
+                        <option value="Sep 2025">Sep 2025</option>
+                        <option value="Oct 2025">Oct 2025</option>
+                        <option value="Nov 2025">Nov 2025</option>
+                        <option value="Dec 2025">Dec 2025</option>
+                    </select>
+                </div>
+
+                <!-- Module Name -->
+                <div class="form-group">
+                    <label for="moduleName">
+                        <span class="icon">📘</span>
+                        Module Name
+                    </label>
+                    <select name="moduleName" id="moduleName" required>
+                        <option value="">--Select Module--</option>
+                        <option value="C">C Programming</option>
+                        <option value="C++">C++ Programming</option>
+                        <option value="Java">Java Programming</option>
+                        <option value="Python">Python Programming</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="React">React.js</option>
+                        <option value="Node">Node.js</option>
+                    </select>
+                </div>
+
+                <!-- Mock Test Number -->
+                <div class="form-group">
+                    <label for="mockNo">
+                        <span class="icon">🧪</span>
+                        Mock Test Number
+                    </label>
+                    <select name="mockNo" id="mockNo" required>
+                        <option value="">--Select Mock Test--</option>
+                        <option value="mock1">Mock Test 1</option>
+                        <option value="mock2">Mock Test 2</option>
+                        <option value="mock3">Mock Test 3</option>
+                        <option value="mock4">Mock Test 4</option>
+                        <option value="mock5">Mock Test 5</option>
+                        <option value="final">Final Mock Test</option>
+                    </select>
+                </div>
+
+                <!-- Test Date (Optional) -->
+                <div class="form-group">
+                    <label for="testDate">
+                        <span class="icon">📅</span>
+                        Test Date (Optional)
+                    </label>
+                    <input type="date" name="testDate" id="testDate" placeholder="Leave blank for today's date">
+                </div>
+
+                <!-- Camera Section -->
+                <div class="camera-section" id="cameraSection">
+                    <h3>
+                        <span class="icon">📸</span>
+                        Student Photo
+                    </h3>
+                    
+                    <video id="camera" autoplay playsinline></video>
+                    <canvas id="snapshot"></canvas>
+                    
+                    <div class="photo-preview" id="photoPreview">
+                        <p style="color: var(--primary-color);"><strong>📷 Captured Photo:</strong></p>
+                        <img id="previewImage" src="" alt="Captured photo">
+                        <br>
+                        <button type="button" class="btn btn-retake" onclick="retakePhoto()">
+                            🔄 Retake Photo
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="photoBase64" id="photoData">
+                    
+                    <div class="camera-controls">
+                        <button type="button" class="btn" onclick="capturePhoto()" id="captureBtn" disabled>
+                            📸 Capture Photo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Status Message -->
+                <div id="statusMessage"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                    ✅ Submit Registration
+                </button>
+
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <a href="getphotos.html" class="nav-btn">
+                        <span class="icon">📁</span>
+                        Manage Photos
+                    </a>
+                    <button type="button" class="nav-btn" onclick="window.location.reload()">
+                        <span class="icon">🔄</span>
+                        Reset Form
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===== APPLICATION STATE =====
+        const AppState = {
+            video: document.getElementById('camera'),
+            canvas: document.getElementById('snapshot'),
+            photoInput: document.getElementById('photoData'),
+            photoPreview: document.getElementById('photoPreview'),
+            previewImage: document.getElementById('previewImage'),
+            cameraSection: document.getElementById('cameraSection'),
+            captureBtn: document.getElementById('captureBtn'),
+            submitBtn: document.getElementById('submitBtn'),
+            stream: null,
+            photoTaken: false
+        };
+
+        // ===== CAMERA HANDLER =====
+        const CameraHandler = {
+            async initialize() {
+                try {
+                    StatusHandler.show('🎥 Initializing camera...', 'info');
+                    
+                    const constraints = {
+                        video: {
+                            width: { ideal: 640 },
+                            height: { ideal: 480 },
+                            facingMode: 'user'
+                        }
+                    };
+
+                    AppState.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    AppState.video.srcObject = AppState.stream;
+                    
+                    AppState.video.addEventListener('loadedmetadata', () => {
+                        AppState.captureBtn.disabled = false;
+                        AppState.cameraSection.classList.add('active');
+                        StatusHandler.show('📷 Camera ready! You can now capture your photo.', 'success');
+                    });
+
+                } catch (error) {
+                    console.error('Camera access error:', error);
+                    StatusHandler.show('❌ Camera access denied. Please allow camera permissions and refresh the page.', 'error');
+                    this.showFallbackOption();
+                }
+            },
+
+            capture() {
+                if (!AppState.stream) {
+                    StatusHandler.show('❌ Camera not available', 'error');
+                    return;
+                }
+
+                // Set canvas dimensions to match video
+                AppState.canvas.width = AppState.video.videoWidth;
+                AppState.canvas.height = AppState.video.videoHeight;
+                
+                // Draw current video frame to canvas
+                const ctx = AppState.canvas.getContext('2d');
+                ctx.drawImage(AppState.video, 0, 0);
+                
+                // Convert to base64 (the controller expects this format)
+                const photoBase64 = AppState.canvas.toDataURL('image/jpeg', 0.8);
+                AppState.photoInput.value = photoBase64;
+                
+                // Show preview
+                AppState.previewImage.src = photoBase64;
+                AppState.photoPreview.style.display = 'block';
+                AppState.video.style.display = 'none';
+                
+                AppState.photoTaken = true;
+                AppState.submitBtn.disabled = false;
+                AppState.captureBtn.textContent = '✅ Photo Captured';
+                AppState.captureBtn.disabled = true;
+                
+                StatusHandler.show('✅ Photo captured successfully!', 'success');
+            },
+
+            retake() {
+                AppState.photoPreview.style.display = 'none';
+                AppState.video.style.display = 'block';
+                AppState.photoInput.value = '';
+                AppState.photoTaken = false;
+                AppState.submitBtn.disabled = true;
+                AppState.captureBtn.textContent = '📸 Capture Photo';
+                AppState.captureBtn.disabled = false;
+                
+                StatusHandler.show('🔄 Ready to take a new photo', 'info');
+            },
+
+            showFallbackOption() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.capture = 'camera';
+                fileInput.onchange = this.handleFileSelect;
+                fileInput.style.marginTop = '15px';
+                
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.innerHTML = '<p style="color: var(--primary-color); margin-bottom: 10px;"><strong>Alternative:</strong> Upload photo from gallery</p>';
+                fallbackDiv.appendChild(fileInput);
+                AppState.cameraSection.appendChild(fallbackDiv);
+            },
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        AppState.photoInput.value = e.target.result;
+                        AppState.previewImage.src = e.target.result;
+                        AppState.photoPreview.style.display = 'block';
+                        AppState.video.style.display = 'none';
+                        AppState.photoTaken = true;
+                        AppState.submitBtn.disabled = false;
+                        StatusHandler.show('✅ Photo uploaded successfully!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+
+            cleanup() {
+                if (AppState.stream) {
+                    AppState.stream.getTracks().forEach(track => track.stop());
+                }
+            }
+        };
+
+        // ===== STATUS HANDLER =====
+        const StatusHandler = {
+            show(message, type) {
+                const statusDiv = document.getElementById('statusMessage');
+                statusDiv.className = `status-message status-${type}`;
+                statusDiv.textContent = message;
+                
+                // Auto-hide success and info messages
+                if (type === 'success' || type === 'info') {
+                    setTimeout(() => {
+                        statusDiv.textContent = '';
+                        statusDiv.className = '';
+                    }, 4000);
+                }
+            }
+        };
+
+        // ===== FORM HANDLER =====
+        const FormHandler = {
+            initialize() {
+                // Form submission handler
+                document.getElementById('studentForm').addEventListener('submit', this.handleSubmit);
+                
+                // Field validation
+                const inputs = document.querySelectorAll('input[required], select[required]');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', this.validateField);
+                    input.addEventListener('input', this.validateField);
+                    input.addEventListener('focus', this.handleFocus);
+                    input.addEventListener('blur', this.handleBlur);
+                });
+            },
+
+            handleSubmit(e) {
+                if (!AppState.photoTaken) {
+                    e.preventDefault();
+                    StatusHandler.show('❌ Please capture a photo before submitting!', 'error');
+                    return;
+                }
+
+                // Add loading state
+                AppState.submitBtn.innerHTML = '<span class="loading"></span> Submitting...';
+                AppState.submitBtn.disabled = true;
+                
+                // Form will submit normally to Spring Boot controller
+                StatusHandler.show('📤 Sending data to server...', 'info');
+            },
+
+            validateField(e) {
+                const field = e.target;
+                if (field.value.trim() === '') {
+                    field.style.borderColor = 'var(--error-color)';
+                } else {
+                    field.style.borderColor = 'var(--primary-color)';
+                }
+            },
+
+            handleFocus(e) {
+                e.target.parentElement.style.transform = 'scale(1.02)';
+            },
+
+            handleBlur(e) {
+                e.target.parentElement.style.transform = 'scale(1)';
+            }
+        };
+
+        // ===== GLOBAL FUNCTIONS (for HTML onclick handlers) =====
+        function capturePhoto() {
+            CameraHandler.capture();
+        }
+
+        function retakePhoto() {
+            CameraHandler.retake();
+        }
+
+        // ===== APPLICATION INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            CameraHandler.initialize();
+            FormHandler.initialize();
+            
+            // Set today's date as default for test date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('testDate').value = today;
+        });
+
+        // ===== CLEANUP =====
+        window.addEventListener('beforeunload', function() {
+            CameraHandler.cleanup();
+        });
+    </script>
+</body>
+</html>

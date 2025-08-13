@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Photos - Photo Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(145deg, #3a3a3a, #2d2d2d);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #4a4a4a;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #9ACD32;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            background: #9ACD32;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c2c2c;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #9ACD32;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #cccccc;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #4a4a4a;
+            background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select:focus, input:focus {
+            border-color: #9ACD32;
+            box-shadow: 0 0 0 3px rgba(154, 205, 50, 0.1);
+            transform: translateY(-1px);
+        }
+
+        select option {
+            background: #2a2a2a;
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(145deg, #9ACD32, #7CB342);
+            color: #1a1a1a;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(154, 205, 50, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, #7CB342, #689F38);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(154, 205, 50, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 10px rgba(154, 205, 50, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .back-button {
+            background: linear-gradient(145deg, #555555, #444444);
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            gap: 8px;
+            box-shadow: 
+                0 4px 15px rgba(85, 85, 85, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button:hover {
+            background: linear-gradient(145deg, #666666, #555555);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(85, 85, 85, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(145deg, #4a4a4a, #3a3a3a);
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+            gap: 8px;
+            box-shadow: 
+                0 4px 15px rgba(74, 74, 74, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(145deg, #5a5a5a, #4a4a4a);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(74, 74, 74, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+
+        .status-message {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-success {
+            background: linear-gradient(145deg, rgba(154, 205, 50, 0.2), rgba(124, 179, 66, 0.2));
+            color: #9ACD32;
+            border: 1px solid #9ACD32;
+        }
+
+        .status-error {
+            background: linear-gradient(145deg, rgba(255, 75, 75, 0.2), rgba(255, 65, 108, 0.2));
+            color: #ff7b7b;
+            border: 1px solid #ff7b7b;
+        }
+
+        .status-info {
+            background: linear-gradient(145deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            color: #4facfe;
+            border: 1px solid #4facfe;
+        }
+
+        /* Form validation feedback */
+        .form-group.error select,
+        .form-group.error input {
+            border-color: #ff7b7b;
+            box-shadow: 0 0 0 3px rgba(255, 123, 123, 0.1);
+        }
+
+        .form-group.success select,
+        .form-group.success input {
+            border-color: #9ACD32;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(154, 205, 50, 0.3);
+            border-radius: 50%;
+            border-top-color: #9ACD32;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .header h2 {
+                font-size: 1.8rem;
+            }
+            
+            select, input, button {
+                padding: 12px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                min-width: auto;
+            }
+        }
+
+        /* Custom scrollbar for select */
+        select::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        select::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        select::-webkit-scrollbar-thumb {
+            background: #9ACD32;
+            border-radius: 4px;
+        }
+
+        select::-webkit-scrollbar-thumb:hover {
+            background: #7CB342;
+        }
+
+        /* Hover effects for form elements */
+        .form-group:hover label {
+            color: #9ACD32;
+            transition: color 0.3s ease;
+        }
+
+        .form-group {
+            transition: transform 0.2s ease;
+        }
+
+        .form-group:focus-within {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-header">
+            <div class="logo">fb</div>
+            <div>
+                <h3 style="color: #9ACD32; margin: 0;">MockTest System</h3>
+                <p style="color: #cccccc; margin: 0; font-size: 0.9rem;">Photo Management Portal</p>
+            </div>
+        </div>
+
+        <div class="header">
+            <h2><span class="emoji">📁</span>Manage Student Photos</h2>
+            <p>Download and manage student photos</p>
+        </div>
+        
+        <form id="photoForm" method="get" action="/students/getallphotos">
+            <div class="form-group" id="batchGroup">
+                <label for="batchName"><span class="emoji">📅</span>Batch Name:</label>
+                <select name="batchName" id="batchName" required>
+                    <option value="">--Select Batch--</option>
+                    <option value="Jan 2025">Jan 2025</option>
+                    <option value="Feb 2025">Feb 2025</option>
+                    <option value="Mar 2025">Mar 2025</option>
+                    <option value="Apr 2025">Apr 2025</option>
+                    <option value="May 2025">May 2025</option>
+                    <option value="Jun 2025">Jun 2025</option>
+                    <option value="Jul 2025">Jul 2025</option>
+                    <option value="Aug 2025">Aug 2025</option>
+                    <option value="Sep 2025">Sep 2025</option>
+                    <option value="Oct 2025">Oct 2025</option>
+                    <option value="Nov 2025">Nov 2025</option>
+                    <option value="Dec 2025">Dec 2025</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="moduleGroup">
+                <label for="moduleName"><span class="emoji">📘</span>Module Name:</label>
+                <select name="moduleName" id="moduleName" required>
+                    <option value="">--Select Module--</option>
+                    <option value="C">C Programming</option>
+                    <option value="C++">C++ Programming</option>
+                    <option value="Java">Java Programming</option>
+                    <option value="Python">Python Programming</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="React">React.js</option>
+                    <option value="Node">Node.js</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="mockGroup">
+                <label for="mockNo"><span class="emoji">🧪</span>Mock Test Number:</label>
+                <select name="mockNo" id="mockNo" required>
+                    <option value="">--Select Mock Test--</option>
+                    <option value="mock1">Mock Test 1</option>
+                    <option value="mock2">Mock Test 2</option>
+                    <option value="mock3">Mock Test 3</option>
+                    <option value="mock4">Mock Test 4</option>
+                    <option value="mock5">Mock Test 5</option>
+                    <option value="final">Final Mock Test</option>
+                </select>
+            </div>
+
+            <div id="statusMessage"></div>
+            
+            <div class="button-group">
+                <button type="submit" id="downloadBtn">
+                    <span class="emoji">📥</span>Download Photos
+                </button>
+                
+                <div class="navigation-buttons">
+                    <a href="index.html" class="back-button">
+                        <span class="emoji">🔙</span>Back to Registration
+                    </a>
+                    
+                    <a href="#" class="nav-btn" onclick="resetForm()">
+                        <span class="emoji">🔄</span>Reset Form
+                    </a>
+                    
+                    <a href="#" class="nav-btn" onclick="previewSelection()">
+                        <span class="emoji">👁️</span>Preview
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form elements
+        const form = document.getElementById('photoForm');
+        const batchSelect = document.getElementById('batchName');
+        const moduleSelect = document.getElementById('moduleName');
+        const mockSelect = document.getElementById('mockNo');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Add event listeners for form validation
+        [batchSelect, moduleSelect, mockSelect].forEach(select => {
+            select.addEventListener('change', validateForm);
+            select.addEventListener('focus', function() {
+                this.parentElement.classList.remove('error');
+            });
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Validate each select field
+            [batchSelect, moduleSelect, mockSelect].forEach(select => {
+                const group = select.parentElement;
+                if (!select.value) {
+                    group.classList.add('error');
+                    group.classList.remove('success');
+                    isValid = false;
+                } else {
+                    group.classList.remove('error');
+                    group.classList.add('success');
+                }
+            });
+
+            downloadBtn.disabled = !isValid;
+            
+            if (isValid) {
+                showStatus('✅ All fields selected. Ready to download!', 'success');
+            }
+
+            return isValid;
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.textContent = message;
+            
+            // Auto-hide success and info messages
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    statusDiv.textContent = '';
+                    statusDiv.className = '';
+                }, 4000);
+            }
+        }
+
+        // Form submission handler
+        form.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                showStatus('❌ Please fill all required fields!', 'error');
+                return;
+            }
+
+            // Show loading state
+            downloadBtn.innerHTML = '<span class="loading"></span> Processing...';
+            downloadBtn.disabled = true;
+            
+            showStatus('🔄 Processing your request...', 'info');
+        });
+
+        function resetForm() {
+            form.reset();
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error', 'success');
+            });
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<span class="emoji">📥</span>Download Photos';
+            showStatus('🔄 Form reset successfully', 'info');
+        }
+
+        function previewSelection() {
+            const batch = batchSelect.value;
+            const module = moduleSelect.value;
+            const mock = mockSelect.value;
+
+            if (!batch || !module || !mock) {
+                showStatus('❌ Please select all fields to preview', 'error');
+                return;
+            }
+
+            const preview = `
+                📋 Selected Configuration:
+                • Batch: ${batch}
+                • Module: ${module}
+                • Mock: ${mock}
+                
+                Click Download to proceed with these selections.
+            `;
+
+            showStatus(preview, 'info');
+        }
+
+        // Initialize form validation on load
+        window.addEventListener('load', function() {
+            downloadBtn.disabled = true;
+            showStatus('📝 Please fill all fields to enable download', 'info');
+        });
+
+        // Add smooth transitions for better UX
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+
+        // Handle connection between index.html and getphotos.html
+        function goToRegistration() {
+            showStatus('🔄 Redirecting to registration...', 'info');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        // Auto-populate fields if coming from registration (URL parameters)
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('batch')) {
+                batchSelect.value = urlParams.get('batch');
+            }
+            if (urlParams.get('module')) {
+                moduleSelect.value = urlParams.get('module');
+            }
+            
+            validateForm();
+        });
+    </script>
+</body>
+</html>
